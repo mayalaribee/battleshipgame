@@ -10,7 +10,7 @@ def main():
         s.bind(HOST, PORT)
         s.listen()
         print("Server started.")
-        import #other player title as rlib
+        import Player2 as rlib
         conn2player, addr = s.accept()
         print('Connected by', addr)
     with conn2player:
