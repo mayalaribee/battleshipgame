@@ -9,8 +9,8 @@ def main():
         #Bind socket to address and publish contact info
         s.bind(HOST, PORT)
         s.listen()
-        print("ROSHAMBO server started. Listening on", (HOST, PORT))
-        import roshambo3_2p_client as rlib
+        print("Battleship server started. Listening on", (HOST, PORT))
+        import player1 as rlib
         conn2client, addr = s.accept()
         print('Connected by', addr)
 
