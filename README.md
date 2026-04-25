@@ -3,4 +3,4 @@ CS32 project
 # two opponents play battle ship against eachother through servers
 #so far, the servers connect and allow for an individual to chose a ship. 
 # the start to the players setting up their game has begun, I need to make the board yet
-# 
+# made player choice to see how each of the players choices works out, ie if they hit or miss a ship when trying to play 
