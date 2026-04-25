@@ -1,0 +1,8 @@
+import player1 and Player2
+def player_setup 
+  players {
+    'player1' \or
+    'Player2'
+  }
+  for player in players:
+    #make the board for them to make their placements on 
