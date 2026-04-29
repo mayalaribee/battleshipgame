@@ -4,5 +4,14 @@ def player_setup
     'player1' \or
     'Player2'
   }
+class Board:
+'''represents the board on which they are making moves'''
+  def __init__(self, 'move options'):
+          #self.id = book_id
+          #self.title = title
+          #self.author = author
+          #self.year = year
+          #self.genre = genre
   for player in players:
+      
     #make the board for them to make their placements on 
