@@ -29,6 +29,42 @@ class Board:
   def __init__(self, player_id, move_id):
           self.player = player_id
           self.move = move_id
-  for player in players:
-      
-    #make the board for them to make their placements on 
+  def traverse(board, major, corner):
+    if major != 'row' and major != 'col':
+      raise ValueError('Unrecognized major specifications')
+    if (corner != 'upper left' and corner != 'lower left' and
+        corner != 'upper right' and corner != 'lower right'):
+      raise ValueError('Unrecognized corner')
+  
+    #determine what corner we are starting from to traverse
+    if corner == 'upper left':
+      range_x = 0, board.size[0],1 
+      range_y = 0, board.size[1],1  
+    elif corner == 'upper right':
+      range_x = board.size[0]-1, -1, -1 
+      range_y = 0,board.size[1], 1
+    elif corner == 'lower left':
+      range_x = 0, board.size[0], 1
+      range_y = board.size[1]-1, -1, -1
+    elif corner == 'lower right':
+      range_x = board.size[0]-1, -1, -1
+      range_y = board.size[1]-1, -1, -1
+    gameboard = board.copy()
+  
+    try:
+      if major == 'col': #goes through columns first
+        for x in range(range_x[0]): # for every x go through all of the y's then moved over to the next x
+          for y in range(range_y[1]):
+            pixel_extract(gameboard, x, y)
+      if major == 'row': #goes through the rows first
+        for y in range(range_y[1]): # for every y go through all of the x's then move to next y row
+          for x in range(range_x[0]):
+            pixel_extract(gameboard, x, y)
+    except ValueError as msg:
+      return (str(msg), gameboard)
+    else:
+        return ('Found none', gameboard)
+  
+    transverseboard = traverse(gameboard, x, y)
+  
+      #make the board for them to make their placements on 
