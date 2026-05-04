@@ -1,0 +1,5 @@
+class Board:
+  def __init__(self, board_size):
+    self.size = board_size
+    board = Board(10)
+    print(board)
