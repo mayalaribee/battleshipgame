@@ -1,70 +1,87 @@
-import player1 and Player2
-import csv 
-def player_setup 
-  players {
-    'player1' \or
-    'Player2'
-  }
-moveoptions = {}
-def load_data(directory='small'):
-    """
-    Load data from CSV files into `player` and `moves` dictionaries
-    """
-    # Load people
-    with open(f"{directory}/moveoptions.csv", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            player_id = int(row["player_id"])
-            move_id = int(row["move_id"])
-            try:
-                player[player_id]["move"].add(move_id)
-                moves[move_id]["player"].add(player_id)
-            except KeyError:
-                pass
-
-    # Client scripts should import player, moves
-    return None
 class Board:
-'''represents the board on which they are making moves'''
-  def __init__(self, player_id, move_id):
-          self.player = player_id
-          self.move = move_id
-  def traverse(board, major, corner):
-    if major != 'row' and major != 'col':
-      raise ValueError('Unrecognized major specifications')
-    if (corner != 'upper left' and corner != 'lower left' and
-        corner != 'upper right' and corner != 'lower right'):
-      raise ValueError('Unrecognized corner')
-  
-    #determine what corner we are starting from to traverse
-    if corner == 'upper left':
-      range_x = 0, board.size[0],1 
-      range_y = 0, board.size[1],1  
-    elif corner == 'upper right':
-      range_x = board.size[0]-1, -1, -1 
-      range_y = 0,board.size[1], 1
-    elif corner == 'lower left':
-      range_x = 0, board.size[0], 1
-      range_y = board.size[1]-1, -1, -1
-    elif corner == 'lower right':
-      range_x = board.size[0]-1, -1, -1
-      range_y = board.size[1]-1, -1, -1
-    gameboard = board.copy()
-  
-    try:
-      if major == 'col': #goes through columns first
-        for x in range(range_x[0]): # for every x go through all of the y's then moved over to the next x
-          for y in range(range_y[1]):
-            pixel_extract(gameboard, x, y)
-      if major == 'row': #goes through the rows first
-        for y in range(range_y[1]): # for every y go through all of the x's then move to next y row
-          for x in range(range_x[0]):
-            pixel_extract(gameboard, x, y)
-    except ValueError as msg:
-      return (str(msg), gameboard)
-    else:
-        return ('Found none', gameboard)
-  
-    transverseboard = traverse(gameboard, x, y)
-  
-      #make the board for them to make their placements on 
+    def __init__(self, board_size):
+        self.size = board_size
+        self.grid = []
+        self.ship_board = []
+        self.guess_board = []
+        for x in range(self.size):
+            row = ['~']* self.size
+            self.grid.append(row)
+        for y in range(self.size):
+            row = ['~']* self.size
+            self.guess_board.append(row)
+        for j in range(self.size):
+            row = ['~']* self.size
+            self.ship_board.append(row)
+        self.small_used = False
+        self.large_used = False
+    def display(self):
+        for row in self.guess_board:
+            new_row = " ".join(row)
+            print(new_row)
+    def ship_place(self):
+        direction = input('horizontal or vertical:')
+        location_row = int(input('Row #:'))
+        location_col = int(input('Column #:'))
+        shipsize = ['large','small']
+        size = input('large or small:')
+        if size == 'small':
+            if self.small_used:
+                print('small ship already used, restart game')
+                return
+            size = 3
+            self.small_used = True
+        elif size == 'large':
+            if self.large_used:
+                print('large ship already used, restart game')
+                return
+            size = 5
+            self.large_used = True
+        if location_row >= self.size or location_col >= self.size or location_row < 0 or location_col < 0:
+            print('Invalid input')
+            return
+        if direction == 'horizontal' and location_col + size >= self.size:
+            print('Invalid input')
+            return
+        if direction == 'vertical' and location_row + size >= self.size:
+            print('Invalid input')
+            return
+        if direction not in ['horizontal', 'vertical']:
+            print('Invalid input')
+            return
+        if direction == 'horizontal':
+            for i in range(location_col, location_col + size):
+                if self.ship_board[location_row][i] != '~':
+                    return
+            for i in range(location_col, location_col + size):
+                row = location_row
+                col = i
+                self.ship_board[row][col] = '^'
+        if direction == 'vertical':
+            for i in range(location_row, location_row+ size):
+                if self.ship_board[i][location_col] != '~':
+                    return
+            for i in range(location_row, location_row + size):
+                row = i
+                col = location_col
+                self.ship_board[row][col] = '^'
+        print('Ship placed')
+
+    def ships_remaining(self):
+        for row in self.grid:
+            for i in row:
+                if i == '^':
+                    return True
+        return False
+    def mask(self, location_row, location_col):
+        if location_row >= self.size or location_col >= self.size or location_row < 0 or location_col < 0:
+            print('Invalid input')
+            return "invalid"
+        if self.ship_board[location_row][location_col] == '^':
+            self.guess_board[location_row][location_col] = 'X'
+            return "hit"
+        self.guess_board[location_row][location_col] == 'O'
+        return "miss"
+
+
+
