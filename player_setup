@@ -19,12 +19,12 @@ class Board:
 
     def display_ships(self): #copies of the boards
         for row in self.ship_board:
-            new_row = " ".join(row)
+            new_row = " ".join(row) #from ai, this .join turns a list into a string, from [~,~,~,^] to ~ ~ ~ ^
             print(new_row)
 
     def display_guesses(self):
         for row in self.guess_board:
-            new_row = " ".join(row)
+            new_row = " ".join(row) 
             print(new_row)
 
     def ship_place(self):
