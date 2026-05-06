@@ -1,91 +1,63 @@
-class Board:
-    def __init__(self, board_size):
-        self.size = board_size
-        self.grid = []
-        self.ship_board = []
-        self.guess_board = []
-        for x in range(self.size): #makes the grid of ~
-            row = ['~']* self.size
-            self.grid.append(row)
-        for y in range(self.size):
-            row = ['~']* self.size
-            self.guess_board.append(row)
-        for j in range(self.size):
-            row = ['~']* self.size
-            self.ship_board.append(row)
-        self.small_used = False
-        self.large_used = False
+from player_setup import Board
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65535      # The port used by the server
+def get_move(player_name):
+    print(f"\n{player_name}'s turn")
+    location_row = int(input("Row#: "))
+    location_col = int(input("Column#: "))
+    return location_row, location_col
+def main():
+    print('## Welcome to Battleship!')
 
-    def display_ships(self): #copies of the boards
-        for row in self.ship_board:
-            new_row = " ".join(row)
-            print(new_row)
+    player1_board = Board(10)
+    player2_board = Board(10)
 
-    def display_guesses(self):
-        for row in self.guess_board:
-            new_row = " ".join(row)
-            print(new_row)
+    print("\nPlayer one place your ships")
+    player1_board.ship_place()
+    player1_board.ship_place()
 
-    def ship_place(self):
-        direction = input('horizontal or vertical:')
-        location_row = int(input('Row #:'))
-        location_col = int(input('Column #:'))
-        size = input('large or small:')
-        if size == 'small': #make sure that you dont reuse the same size ship
-            if self.small_used:
-                print('small ship already used, restart game')
-                return
-            size = 3
-            self.small_used = True
-        elif size == 'large':
-            if self.large_used:
-                print('large ship already used, restart game')
-                return
-            size = 5
-            self.large_used = True
+    print("\nPlayer two place your ships")
+    player2_board.ship_place()
+    player2_board.ship_place()
+    ships_down = 0
+    ships_hit = 0
+    turn = 1
+    while True:
+        if turn == 1:
+            if(ships_down == 8):
+                print("You won the match!")
+                break
+            location_row, location_col = get_move("Player 1")
 
-        if location_row >= self.size or location_col >= self.size or location_row < 0 or location_col < 0: #makes it so that you have to stay inside the grid
-            print('Invalid input')
-            return
-        if direction == 'horizontal' and location_col + size >= self.size: #makes sure the ships stay in bounds
-            print('Invalid input')
-            return
-        if direction == 'vertical' and location_row + size >= self.size:
-            print('Invalid input')
-            return
-        if direction not in ['horizontal', 'vertical']: #makes it so that you cant put anything other than horizontal or vertical
-            print('Invalid input')
-            return
+            result = player2_board.mask(location_row, location_col)
 
-        if direction == 'horizontal':
-            for i in range(location_col, location_col + size):
-                if self.ship_board[location_row][i] != '~': #goes across the columns to go through each to make sure they are all ~, this is so ships dont overlap
-                    return
-            for i in range(location_col, location_col + size):
-                row = location_row
-                col = i
-                self.ship_board[row][col] = '^' #goes in and adds all of the ships
+            if result == "hit":
+                player1_board.guess_board[location_row][location_col] = "H"
+                ships_down +=1
+                print("Hit!")
+            else:
+                player1_board.guess_board[location_row][location_col] = "M"
+                print("Miss!")
 
-        if direction == 'vertical':
-            for i in range(location_row, location_row+ size):
-                if self.ship_board[i][location_col] != '~':
-                    return
-            for i in range(location_row, location_row + size):
-                row = i
-                col = location_col
-                self.ship_board[row][col] = '^'
-        print('Ship placed')
-        self.display_ships()
-        
-    def mask(self, location_row, location_col):
-        if location_row >= self.size or location_col >= self.size or location_row < 0 or location_col < 0:
-            print('Invalid input')
-            return "invalid"
-        if self.ship_board[location_row][location_col] == '^':
-            self.guess_board[location_row][location_col] = 'X'
-            return "hit"
-        self.guess_board[location_row][location_col] = 'O'
-        return "miss"
+            player1_board.display_guesses()
+            turn = 2
+        else:
+            if(ships_hit == 8):
+                print("You won the match!")
+                break
+            location_row, location_col = get_move("Player 2")
+            result =  player1_board.mask(location_row, location_col)
+            if result == "hit":
+                player2_board.guess_board[location_row][location_col] = "X"
+                ships_hit +=1
+                print("Hit!")
+            else:
+                player2_board.guess_board[location_row][location_col] = "O"
+                print("Miss!")
+            player2_board.display_guesses()
+            turn = 1
 
 
+if __name__ == '__main__':
 
+    main()
