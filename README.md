@@ -1,8 +1,3 @@
 # battleshipgame
 CS32 project
-two opponents play battle ship against eachother through servers
-so far, the servers connect and allow for an individual to chose a ship. 
-the start to the players setting up their game has begun, 
-I made a class with several functions in it that update different aspects of the board to show how the ships are changing as they make their guesses
-Once there are no ships left it prints you have won and the game is over. 
-I used ai to help guide me through the visualization process for the board, as well as through any debugging issues that I needed help on. That being said this was only guidance and it was not writing my code for me but helping me with my thinking. 
+To start off, you can ignore the player1.py, player_setup, socket32, Player2.py and setup attempt 2. All of these were written in attempt to connect two players across servers. As I progressed through this I could not get through the debugging to connected the two servers, which I believe was partially due to the fact that I was using the socket from pset 3. That being said, I switched to a local game mode as seen in gameplay. This code allows two players to place ships on seperate boards and take guesses at the other players board without seeing it as one does in battleship. When either player sinks all of the others ships it prints out a statement that they have won. Throghout this project I used chat gpt as a guide to help me establish the board when it came to formulating the board. However, while I was using it, it was guiding me not directly writing the code for me. I have written out explanations for any tough code next to it, as well as any code that I was advised to use from ai. 
