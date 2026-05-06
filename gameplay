@@ -1,0 +1,63 @@
+from player_setup import Board
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 65535      # The port used by the server
+def get_move(player_name):
+    print(f"\n{player_name}'s turn")
+    location_row = int(input("Row#: "))
+    location_col = int(input("Column#: "))
+    return location_row, location_col
+def main():
+    print('## Welcome to Battleship!')
+
+    player1_board = Board(10)
+    player2_board = Board(10)
+
+    print("\nPlayer one place your ships")
+    player1_board.ship_place()
+    player1_board.ship_place()
+
+    print("\nPlayer two place your ships")
+    player2_board.ship_place()
+    player2_board.ship_place()
+    ships_down = 0
+    ships_hit = 0
+    turn = 1
+    while True:
+        if turn == 1:
+            if(ships_down == 8):
+                print("You won the match!")
+                break
+            location_row, location_col = get_move("Player 1")
+
+            result = player2_board.mask(location_row, location_col)
+
+            if result == "hit":
+                player1_board.guess_board[location_row][location_col] = "H"
+                ships_down +=1
+                print("Hit!")
+            else:
+                player1_board.guess_board[location_row][location_col] = "M"
+                print("Miss!")
+
+            player1_board.display_guesses()
+            turn = 2
+        else:
+            if(ships_hit == 8):
+                print("You won the match!")
+                break
+            location_row, location_col = get_move("Player 2")
+            result =  player1_board.mask(location_row, location_col)
+            if result == "hit":
+                player2_board.guess_board[location_row][location_col] = "X"
+                ships_hit +=1
+                print("Hit!")
+            else:
+                player2_board.guess_board[location_row][location_col] = "O"
+                print("Miss!")
+            player2_board.display_guesses()
+            turn = 1
+
+
+if __name__ == '__main__':
+
+    main()
